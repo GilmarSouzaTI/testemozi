@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presente Especial</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Dancing Script', cursive;
+      background: url('https://www.transparenttextures.com/patterns/old-paper.png'), #f5e6cc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #5a3e36;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .message-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #8b5e3c;
+    }
+
+    p {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 10px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .rose {
+      font-size: 4em;
+      color: #e74c3c;
+      margin-top: 20px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      display: none; /* Escondido inicialmente */
+      animation: fadeIn 0.5s ease-in-out;
+      z-index: 2;
+    }
+
+    .popup p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .popup button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .popup button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+
+    .rain {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: none; /* Escondido inicialmente */
+    }
+
+    .drop {
+      position: absolute;
+      bottom: 100%;
+      width: 2px;
+      height: 50px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 255, 0.7));
+      animation: fall linear infinite;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <audio id="background-music" loop>
+    <source src="https://drive.google.com/uc?export=download&id=1dCIy13RIASfWcvOBf6m1xn8tEsVhDqC8" type="audio/mpeg">
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <!-- Tela inicial -->
+  <div class="message-container" id="start-screen">
+    <h1>Antes de começar...</h1>
+    <p>Vamos dar play na música?</p>
+    <button onclick="startMusic()">Play</button>
+  </div>
+
+  <!-- Perguntas e conteúdo -->
+  <div class="message-container" id="question1" style="display: none;">
+    <h1>Mozi, posso te fazer algumas perguntas? 😊</h1>
+    <p>Você topa?</p>
+    <button onclick="nextQuestion('question2')">Sim</button>
+    <button onclick="showPopup('Você tem que apertar Sim! 😊')">Não</button>
+  </div>
+
+  <div class="message-container" id="question2" style="display: none;">
+    <h1>Você me ama? ❤️</h1>
+    <p>Escolha uma opção:</p>
+    <button onclick="nextQuestion('question3')">Sim</button>
+    <button onclick="showPopup('Resposta errada! Tente de novo. 😉')">Não</button>
+    <button onclick="showPopup('Resposta errada! Tente de novo. 😉')">Claro que não</button>
+  </div>
+
+  <div class="message-container" id="question3" style="display: none;">
+    <h1>Está com saudades de mim? 😢</h1>
+    <p>Escolha uma opção:</p>
+    <button onclick="nextQuestion('question4')">Sim</button>
+    <button onclick="showPopup('Resposta errada! Tente de novo. 😊')">Não</button>
+  </div>
+
+  <div class="message-container" id="question4" style="display: none;">
+    <h1>Está feliz? 😊</h1>
+    <p>Escolha uma opção:</p>
+    <button onclick="nextQuestion('question5')">Sim</button>
+    <button onclick="showPopup('Resposta errada! Tente de novo. 😊')">Não</button>
+  </div>
+
+  <div class="message-container" id="question5" style="display: none;">
+    <h1>Quer um presente? 🎁</h1>
+    <p>Escolha com carinho:</p>
+    <button onclick="showFinal()">Sim</button>
+    <button onclick="showPopup('Resposta errada! Tente de novo. 😊')">Não</button>
+  </div>
+
+  <div class="message-container" id="final" style="display: none;">
+    <h1>Para você, Cariño ❤️</h1>
+    <p>Com todo o meu amor,</p>
+    <div class="rose">🌹</div>
+  </div>
+
+  <div class="popup" id="popup">
+    <p id="popupText"></p>
+    <button onclick="closePopup()">Fechar</button>
+  </div>
+
+  <div class="rain" id="rain">
+    <!-- Pingos de chuva serão gerados via JavaScript -->
+  </div>
+
+  <script>
+    const music = document.getElementById('background-music');
+
+    function startMusic() {
+      music.play(); // Inicia a música
+      document.getElementById('start-screen').style.display = 'none'; // Esconde a tela inicial
+      document.getElementById('question1').style.display = 'block'; // Mostra a primeira pergunta
+    }
+
+    function nextQuestion(nextId) {
+      document.getElementById('question1').style.display = 'none';
+      document.getElementById('question2').style.display = 'none';
+      document.getElementById('question3').style.display = 'none';
+      document.getElementById('question4').style.display = 'none';
+      document.getElementById('question5').style.display = 'none';
+      document.getElementById(nextId).style.display = 'block';
+    }
+
+    function showPopup(message) {
+      const popup = document.getElementById('popup');
+      const popupText = document.getElementById('popupText');
+      popupText.innerText = message;
+      popup.style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
+
+    function showFinal() {
+      document.getElementById('question5').style.display = 'none';
+      document.getElementById('final').style.display = 'block';
+      document.getElementById('rain').style.display = 'block';
+      createRain();
+    }
+
+    function createRain() {
+      const rainContainer = document.getElementById('rain');
+      for (let i = 0; i < 100; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'drop';
+        drop.style.left = `${Math.random() * 100}vw`;
+        drop.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
+        drop.style.animationDelay = `${Math.random() * 2}s`;
+        rainContainer.appendChild(drop);
+      }
+    }
+  </script>
+</body>
+</html>
